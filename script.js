@@ -104,20 +104,27 @@ const Controller = ((model, view) => {
   const select = () => {
     //var selectul=document.querySelector(view.domstr.select);
     window.addEventListener('click', (event) => {
+      var flag = true;
       if (event.target.className == 'doselect') {
-        event.target.classList.add('style');
-
         for (let i = 0; i < state.courses.length; i++) {
           if (event.target.id == state.courses[i].courseId) {
-            state.credit += state.courses[i].credit;
-            state.selectedCour.push(state.courses[i]);
+            if (state.credit + state.courses[i].credit <= 18) {
+              state.credit += state.courses[i].credit;
+              state.selectedCour.push(state.courses[i]);
+              event.target.classList.add('style');
+            } else {
+              alert('You can only choose up to 18 credits in one semester');
+              flag = false;
+            }
           }
         }
         //console.log(state.selectedCour);
-        state.courses = state.courses.filter(
-          (item) => item.courseId != event.target.id
-        );
-        view.pagecrerender(state.credit);
+        if (flag == true) {
+          state.courses = state.courses.filter(
+            (item) => item.courseId != event.target.id
+          );
+          view.pagecrerender(state.credit);
+        }
         //console.log(state.courses);
       } else if (event.target.className == 'doselect style') {
         event.target.classList.remove('style');
